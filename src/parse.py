@@ -1,4 +1,5 @@
 import fetch
+
 def fetch_books_data():
   books = []
   for i in range(1, 51):
@@ -17,3 +18,22 @@ def fetch_books_data():
       books.append([title, price, star])
       
   return books
+
+def fetch_yahoo_finance():
+    stock_data = []
+    list_stock = ['INTC', 'AMZN', 'NOK', 'GE']
+    
+    for symbol in list_stock:
+        url = f"https://ca.finance.yahoo.com/quote/{symbol}/"
+        soup = fetch.fetch_page(url)
+        
+        price_tag = soup.find('span', class_='base yf-ipw1h0').text
+        name_tag = soup.find('h1', class_='yf-xxbei9')
+        if name_tag:
+           full_name = name_tag.text.strip()
+           name, symbol_from_name = full_name.rsplit(' (', 1)
+           symbol_from_name = symbol_from_name.rstrip(')')
+
+        stock_data.append([name, symbol, price_tag])
+    
+    return stock_data
